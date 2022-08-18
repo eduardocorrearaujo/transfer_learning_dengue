@@ -4,7 +4,7 @@ import joblib
 import numpy as np
 import pandas as pd 
 from preprocessing import get_ml_data
-from plots_qlgbm import plot_prediction
+from plots_pgbm import plot_prediction
 from pgbm_nb import PGBMRegressor,PGBM
 from preprocessing import build_lagged_features 
 from sklearn.model_selection import train_test_split
