@@ -15,9 +15,13 @@ def plot_prediction(preds, preds25, preds975, ydata, title, state, train_size, d
     min_val = min([min(ydata), np.nanmin(preds)])
     max_val = max([max(ydata), np.nanmax(preds)])
 
-    if train_size != None: 
-        point = ydata.index[train_size]
-        plt.vlines(point, min_val, max_val, 'g', 'dashdot', lw=2, label = 'Train/Test')
+    if train_size != None:
+        if train_size == len(ydata): 
+            point = ydata.index[train_size-1]
+            plt.vlines(point, min_val, max_val, 'g', 'dashdot', lw=2, label = 'Train/Test')
+        else: 
+            point = ydata.index[train_size]
+            plt.vlines(point, min_val, max_val, 'g', 'dashdot', lw=2, label = 'Train/Test')
 
     pred_window = preds.shape[1]
     llist = range(len(ydata.index) - (preds.shape[1]))

@@ -296,7 +296,7 @@ def train_fine(doenca, model, X_train, Y_train, batch_size=1, epochs=10, geocode
         callbacks=[TB_callback, EarlyStopping(monitor = 'loss', patience=10)]
     )
     
-    model.save(f"saved_models/trained_{geocode}_model_{doenca}.h5", overwrite=overwrite)
+    model.save(f"saved_models/lstm/trained_{geocode}_model_{doenca}.h5", overwrite=overwrite)
 
     return model
 
@@ -379,7 +379,7 @@ def transf_chik_pred(city_name, city, ini_date = '2021-01-01', end_train_date = 
     indice = list(df.index)
     indice = [i.date() for i in indice]
     
-    with open(f'predictions/tl_{city}_{label}.pkl', 'wb') as f:
+    with open(f'predictions/lstm/tl_{city}_{label}.pkl', 'wb') as f:
         pickle.dump({'indice': indice, 'target': Y_pred,  'pred': df_pred,'pred25': df_pred25, 'pred975': df_pred975,                     
                     'factor': factor, 'city_name': city_name}, f)
 

@@ -32,7 +32,7 @@ def qf_prediction(city, state, predict_n, look_back, doenca = 'dengue', ratio = 
 
         model = PGBMRegressor(n_estimators= 100,  distribution='poisson')
         
-        model.fit(X_train, tgt)
+        model.fit(X_train[:len(tgt)], tgt)
 
         model.save(f'./saved_models/pgbm/{city}_{doenca}_city_model_{d}_pgbm.pt')
 
@@ -67,7 +67,7 @@ def cross_dengue_chik_prediction(city, state, predict_n, look_back, ini_date = '
     """
     Functio to apply a model trained with dengue data in chik data. 
     """
-    X_data, X_train, targets, target = get_ml_data(city, doenca = 'chik', ini_date = ini_date, end_date = end_date, 
+    X_data, X_train, targets, target = get_ml_data(city, 'chik', ini_date = ini_date, end_train_date = None, end_date = end_date, 
                                         ratio = 0.99, predict_n = predict_n, look_back = look_back)
 
     preds = np.empty((len(X_data), predict_n))

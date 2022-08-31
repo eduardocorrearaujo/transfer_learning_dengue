@@ -13,6 +13,7 @@ develop-eggs/
 dist/
 downloads/
 tensorboard/
+__pycache__/
 eggs/
 .eggs/
 lib/
@@ -32,6 +33,7 @@ MANIFEST
 #  before PyInstaller builds the exe, so as to inject date/other infos into it.
 *.manifest
 *.spec
+.pyc 
 
 # Installer logs
 pip-log.txt
@@ -78,6 +80,13 @@ target/
 
 # Jupyter Notebook
 .ipynb_checkpoints
+.ipynb_checkpoints/
+
+.DS_Store
+# tensorflow
+.v2
+
+
 
 # IPython
 profile_default/
