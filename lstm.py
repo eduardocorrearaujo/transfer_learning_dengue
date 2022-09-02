@@ -180,7 +180,7 @@ def train(model, X_train, Y_train, label, batch_size=1, epochs=10, geocode=None,
         callbacks=[TB_callback, EarlyStopping(monitor = 'loss', patience=10)]
     )
     
-    model.save(f"./saved_models/lstm/trained_{geocode}_model_{label}.h5", overwrite=overwrite)
+    model.save(f"../saved_models/lstm/trained_{geocode}_model_{label}.h5", overwrite=overwrite)
 
     return model, hist
 
@@ -188,7 +188,7 @@ def train(model, X_train, Y_train, label, batch_size=1, epochs=10, geocode=None,
 def make_pred(model, city, doenca,  epochs, ini_date = None, end_train_date = None, 
                  end_date = None,ratio= 0.75, hidden = 8,
                  predict_n = 4, look_back =  4,
-                  label = 'model'):
+                  label = 'model', filename = None):
     """
     :param model: tensorflow model. 
     :param city: int. IBGE code of the city. 
@@ -206,7 +206,7 @@ def make_pred(model, city, doenca,  epochs, ini_date = None, end_train_date = No
     df,factor,  X_train, Y_train, X_pred, Y_pred = get_nn_data(city, doenca = doenca, ini_date = ini_date, 
                                                      end_date = end_date, end_train_date = end_train_date,
                                                     ratio = ratio, look_back = look_back,
-                                                    predict_n = predict_n)
+                                                    predict_n = predict_n, filename = filename)
    
     model, hist =  train(model, X_train, Y_train, label = label, batch_size=1, epochs=epochs, geocode=city, overwrite=True, validation_split = 0.25)
    
@@ -216,7 +216,7 @@ def make_pred(model, city, doenca,  epochs, ini_date = None, end_train_date = No
     df_pred25 = pd.DataFrame(np.percentile(pred, 2.5, axis=2))
     df_pred975 = pd.DataFrame(np.percentile(pred, 97.5, axis=2))
     
-    with open(f'./predictions/lstm/lstm_{city}_{doenca}_{label}.pkl', 'wb') as f:
+    with open(f'../predictions/lstm/lstm_{city}_{doenca}_{label}.pkl', 'wb') as f:
         pickle.dump({'xdata': X_train, 'indice': list(df.index)  , 'target': Y_pred,  'pred': df_pred, 'ub': df_pred975,  'lb':df_pred25,
                     'factor': factor, 'city': city}, f)
 
@@ -233,7 +233,7 @@ def make_pred(model, city, doenca,  epochs, ini_date = None, end_train_date = No
 
 def apply_dengue_chik(city_name, city, ini_date = '2021-01-01', 
                      end_date = '2022-01-01', look_back = 4,
-                     predict_n = 4,  label_m = f'dengue_train_base' ): 
+                     predict_n = 4,  label_m = f'dengue_train_base', filename = None ): 
 
     """
     Function to apply a model trained with dengue data using chik data. 
@@ -243,9 +243,10 @@ def apply_dengue_chik(city_name, city, ini_date = '2021-01-01',
                                                     ini_date = ini_date, end_date = end_date,
                                                     end_train_date = None, ratio = 1,
                                                     look_back = look_back,
-                                                    predict_n = predict_n)
+                                                    predict_n = predict_n,
+                                                    filename = filename)
     
-    model_dengue = keras.models.load_model(f'./saved_models/lstm/trained_{city}_model_{label_m}.h5',  compile =False)
+    model_dengue = keras.models.load_model(f'../saved_models/lstm/trained_{city}_model_{label_m}.h5',  compile =False)
 
     pred_chik = evaluate(model_dengue, X_pred)
 
@@ -253,7 +254,7 @@ def apply_dengue_chik(city_name, city, ini_date = '2021-01-01',
     df_pred25_chik = pd.DataFrame(np.percentile(pred_chik, 2.5, axis=2))
     df_pred975_chik = pd.DataFrame(np.percentile(pred_chik, 97.5, axis=2))
 
-    with open(f'./predictions/lstm/lstm_{city}_dengue_model_chik_predictions.pkl', 'wb') as f:
+    with open(f'../predictions/lstm/lstm_{city}_dengue_model_chik_predictions.pkl', 'wb') as f:
         pickle.dump({'indice': list(df.index)  , 'target': Y_pred,  'pred': df_pred_chik, 'ub': df_pred975_chik,  
                      'lb':df_pred25_chik, 
                     'factor': factor, 'city_name': city_name
@@ -296,7 +297,7 @@ def train_fine(doenca, model, X_train, Y_train, batch_size=1, epochs=10, geocode
         callbacks=[TB_callback, EarlyStopping(monitor = 'loss', patience=10)]
     )
     
-    model.save(f"saved_models/lstm/trained_{geocode}_model_{doenca}.h5", overwrite=overwrite)
+    model.save(f"../saved_models/lstm/trained_{geocode}_model_{doenca}.h5", overwrite=overwrite)
 
     return model
 
@@ -346,7 +347,7 @@ def transf_model(filename = 'trained_2312908_model_dengue.h5', features = 11,
 def transf_chik_pred(city_name, city, ini_date = '2021-01-01', end_train_date = '2021-03-01',  
                             end_date = '2022-12-31', ratio =0.75, filename = 'trained_2312908_model_dengue.h5',  epochs =100, features = 11,  
                             predict_n = 4, look_back = 4, loss = 'msle', validation_split = 0.15,
-                            label = f'transf_chik'): 
+                            label = f'transf_chik', data_filename = None): 
 
     """
     Function to apply the transfer learning loading a model trained with dengue data and retraining it using the chik data. 
@@ -357,7 +358,8 @@ def transf_chik_pred(city_name, city, ini_date = '2021-01-01', end_train_date = 
     df,factor,  X_train, Y_train, X_pred, Y_pred = get_nn_data(city, doenca = 'chik', ini_date = ini_date, 
                                                      end_date = end_date, end_train_date = end_train_date,
                                                     ratio = ratio, look_back = look_back,
-                                                    predict_n = predict_n)
+                                                    predict_n = predict_n,
+                                                    filename = data_filename)
 
     model_transf =  transf_model(filename = filename, features = features,  
                             predict_n = predict_n, look_back = look_back, batch_size = 1, loss = loss )
@@ -379,7 +381,7 @@ def transf_chik_pred(city_name, city, ini_date = '2021-01-01', end_train_date = 
     indice = list(df.index)
     indice = [i.date() for i in indice]
     
-    with open(f'predictions/lstm/tl_{city}_{label}.pkl', 'wb') as f:
+    with open(f'../predictions/lstm/tl_{city}_{label}.pkl', 'wb') as f:
         pickle.dump({'indice': indice, 'target': Y_pred,  'pred': df_pred,'pred25': df_pred25, 'pred975': df_pred975,                     
                     'factor': factor, 'city_name': city_name}, f)
 

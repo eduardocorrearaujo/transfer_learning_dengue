@@ -58,7 +58,7 @@ def plot_prediction(preds, preds25, preds975, ydata, title, state, train_size, d
     plt.xticks(rotation=30)
     plt.legend(loc=0)
     if save:
-        plt.savefig(f'plots/qlgbm_qlgbm_{doenca}_{label}_ss.png',bbox_inches='tight', dpi=300)
+        plt.savefig(f'../plots/qlgbm_qlgbm_{doenca}_{label}_ss.png',bbox_inches='tight', dpi=300)
     plt.show()
     return x, y, y25, y975
 
@@ -105,7 +105,7 @@ def plot_transf_prediction(pred_window, preds_t, preds, ydata, title, state, tra
     plt.xticks(rotation=0)
     plt.legend(loc=0)
     if save:
-        plt.savefig(f'plots/qlgbm/qlgbm_{doenca}_{title}_ss.png', dpi=300)
+        plt.savefig(f'../plots/qlgbm/qlgbm_{doenca}_{title}_ss.png', dpi=300)
     plt.show()
     return None
 
@@ -142,4 +142,4 @@ def plot_cross_qq(city, doenca, q_o, q_p,model_name, city_name):
     ax.set_ylim([0, 100])
     plt.plot([0, 100], [0, 100], 'k')
     #plt.title(f'Predictions percentiles with {model_name.lower()} for {doenca} at {city_name}')
-    plt.savefig(f'plots/qlgbm/qlgbm_cross_qqbplot_{model_name}_{doenca}_{city}.png', dpi=300)
+    plt.savefig(f'../plots/qlgbm/qlgbm_cross_qqbplot_{model_name}_{doenca}_{city}.png', dpi=300)

@@ -71,7 +71,7 @@ def plot_predicted_vs_data(predicted, Ydata, indice, label, pred_window, factor,
     P.ylabel("incidence")
     P.xticks(rotation=45)
     P.legend()
-    P.savefig(f'./plots/lstm/{label_name}.png',bbox_inches='tight',  dpi = 300)
+    P.savefig(f'../plots/lstm/{label_name}.png',bbox_inches='tight',  dpi = 300)
     P.show()
     
     return 
@@ -109,7 +109,7 @@ def plot_transf_predicted_vs_data(df_predicted_t, df_predicted, Ydata, indice, l
     P.ylabel("incidence")
     P.xticks(rotation=30)
     P.legend()
-    P.savefig(f'plots/lstm/{label_name}.png',bbox_inches='tight',  dpi = 300)
+    P.savefig(f'../plots/lstm/{label_name}.png',bbox_inches='tight',  dpi = 300)
     P.show()
 
 def predicted_vs_observed(predicted, real, city, state, doenca, model_name, city_name, plot=True):
@@ -142,4 +142,4 @@ def plot_cross_qq(city, doenca, q_o, q_p,model_name, city_name):
     ax.set_ylim([0, 100])
     P.plot([0, 100], [0, 100], 'k')
     #P.title(f'Transfer prediction percentiles with {model_name.lower()} for {doenca} at {city_name}')
-    P.savefig(f'plots/lstm/cross_qqbplot_{model_name}_{doenca}_{city}.png', dpi=300)
+    P.savefig(f'../plots/lstm/cross_qqbplot_{model_name}_{doenca}_{city}.png', dpi=300)

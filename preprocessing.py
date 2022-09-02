@@ -92,7 +92,7 @@ def normalize_data(df, log_transform=False):
 
     return df_norm, df.max(axis=0)
 
-def get_nn_data(city, doenca, ini_date = None, end_date = None, end_train_date = None, ratio = 0.75, look_back = 4, predict_n = 4 ):
+def get_nn_data(city, doenca, ini_date = None, end_date = None, end_train_date = None, ratio = 0.75, look_back = 4, predict_n = 4, filename = None ):
     """
     :param city: int. The ibge code of the city, it's a seven number code 
     :param doenca: string. The available options are 'dengue' or 'chik'
@@ -104,8 +104,11 @@ def get_nn_data(city, doenca, ini_date = None, end_date = None, end_train_date =
     :param predict_n: int. Number of days forecast
 
     """
+
+    if filename == None:
+        filename = f'../data/{doenca}_{city}.csv'
     
-    df = pd.read_csv(f'./data/{doenca}_{city}.csv', index_col = 'Unnamed: 0' )
+    df = pd.read_csv(filename, index_col = 'Unnamed: 0' )
     df.index = pd.to_datetime(df.index)  
 
     target_col = list(df.columns).index("casos_est_{}".format(city))
@@ -162,9 +165,11 @@ def get_nn_data(city, doenca, ini_date = None, end_date = None, end_train_date =
     return df,factor,  X_train, Y_train, X_pred, Y_pred
 
 
-def get_ml_data(city, doenca, ini_date, end_train_date, end_date, ratio, predict_n, look_back):
+def get_ml_data(city, doenca, ini_date, end_train_date, end_date, ratio, predict_n, look_back, filename = None):
 
-    data = pd.read_csv(f'./data/{doenca}_{city}_cluster.csv', index_col = 'Unnamed: 0' )
+    if filename == None: 
+        filename = f'../data/{doenca}_{city}_cluster.csv'
+    data = pd.read_csv(filename, index_col = 'Unnamed: 0' )
     data.index = pd.to_datetime(data.index)  
 
     for i in data.columns:
